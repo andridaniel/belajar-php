@@ -1,3 +1,8 @@
+<?php
+// Simpan harga dalam variabel
+$harga = "Rp.10.000.000";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -322,6 +327,7 @@
                   <!-- /.card-header -->
                   <div class="card-body">
                     <table class="table table-bordered">
+                      
                       <thead>
                         <tr>
                           <th style="width: 10px">#</th>
@@ -335,7 +341,7 @@
                         <tr>
                           <td>1.</td>
                           <td>Acer Aspire 3 Slim A315</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -359,7 +365,7 @@
                         <tr>
                           <td>2.</td>
                           <td>Lenovo IdeaPad Slim D330 Flex</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -383,7 +389,7 @@
                         <tr>
                           <td>3.</td>
                           <td>ASUS VivoBook 15 A516MAO N4020</td>
-                          <td>IDR 20K</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -407,7 +413,7 @@
                         <tr>
                           <td>4.</td>
                           <td>HP Laptop 14s dq0508TU</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -431,7 +437,7 @@
                         <tr>
                           <td>5.</td>
                           <td>Xiaomi RedmiBook 15</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -455,7 +461,7 @@
                         <tr>
                           <td>6.</td>
                           <td>Lenovo V14 G2 ITL</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -479,7 +485,7 @@
                         <tr>
                           <td>7.</td>
                           <td>ASUS VivoBook 14 A416FA</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
@@ -503,7 +509,7 @@
                         <tr>
                           <td>8.</td>
                           <td>ASUS VivoBook Go 14 Flip TP1400KA</td>
-                          <td>Rp.9.000.000</td>
+                          <td><?php echo $harga; ?></td>
                           <td>
                             <div class="text-center">
                               <img
