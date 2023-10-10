@@ -1,4 +1,14 @@
 <?php 
+
+session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: login.html');
+    exit;
+}
+echo 'Selamat datang di dalam dashboard, ' . $_SESSION['username'] . '!';
+
+
     $product = [
         ["1","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk1.jpg","laptop ini baik untuk mahasiwsa"],
         ["2","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk2.jpg","laptop ini baik untuk mahasiwsa"],

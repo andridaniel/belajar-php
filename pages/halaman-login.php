@@ -19,6 +19,31 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css" />
   </head>
+
+  <?php
+session_start();
+
+
+$validUsername = 'andri';
+$validPassword = 'andri';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+
+    if ($username === $validUsername && $password === $validPassword) {
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $username;
+
+        // Redirect ke halaman setelah login
+        header('Location: ../pages/dashboard.php');
+        exit;
+    } else {
+        echo 'Username atau password salah. Silakan coba lagi.';
+    }
+}
+?>
   <body class="hold-transition login-page">
     <div class="login-box">
       <!-- /.login-logo -->
@@ -36,13 +61,13 @@
           </div>
           <h3 class="text-center">Log-in</h3>
           <p class="login-box-msg">
-            Please enter your Email and Password
+            Please enter your Username and Password
           </p>
 
-          <form action="../Pages/dashboard.html" method="post">
+          <form action="halaman-login.php" method="POST">
             <div class="container">
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email" />
+                    <input type="text" class="form-control" id="username" name="username"  placeholder="Username" />
                     <div class="input-group-append">
                       <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
@@ -50,11 +75,7 @@
                     </div>
                   </div>
                   <div class="input-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      placeholder="Password"
-                    />
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password"/>
                     <div class="input-group-append">
                       <div class="input-group-text">
                         <span class="fas fa-lock"></span>
