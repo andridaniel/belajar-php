@@ -90,7 +90,12 @@ if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
                 </div>
                 <div class="form-group">
                 <label for="kategoriproduct">Kategori Product</label>
-                <input type="text" name="kategoriproduct" class="form-control" id="kategoriproduct" required value="<?php echo $data["category_id"]; ?>">
+                <select name="kategoriproduct" class="form-control" id="kategoriproduct">
+                  <option value="" disabled>Pilih Kategori</option>
+                  <option value="1">Sports</option>
+                  <option value="2">Daily</option>
+                  <option value="3">Accesoris</option>
+                </select>
                 </div>
                 <div class="form-group">
                 <label for="kodeproduct">Kode Product</label>

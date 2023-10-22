@@ -1,3 +1,46 @@
+<?php 
+include 'koneksi.php';
+
+function query($sql) {
+    global $koneksi; // Use the connection from the "koneksi.php" file
+    $result = $koneksi->query($sql);
+    
+    if ($result) {
+        return $result;
+    } else {
+        // Handle errors if the query fails
+        echo "Error: " . $koneksi->error;
+    } 
+}
+
+$jumlahDataPerHalaman = 5;
+$jumlahData = query("SELECT COUNT(*) AS total FROM products");
+$jumlahData = $jumlahData->fetch_assoc()['total'];        
+$jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
+$halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+$awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
+$products = query("SELECT * FROM products LIMIT $awalData, $jumlahDataPerHalaman");
+
+// Search
+function cari($keyword_search) {
+    $query = "SELECT * FROM products
+              WHERE
+              product_name LIKE '%$keyword_search%' OR
+              category_id LIKE '%$keyword_search%' OR
+              product_code LIKE '%$keyword_search%' OR
+              description LIKE '%$keyword_search%' 
+            ";
+    return query($query);
+}
+
+if (isset($_POST["cari"])) {
+    $products = cari($_POST["keyword_search"]);
+}
+
+$koneksi->close(); // Close the connection after all operations are completed
+
+      
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,21 +63,6 @@
     <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css" />
   </head>
   <body class="hold-transition sidebar-mini">
-
-
-  <!-- memasukan data -->
-  <?php 
-        
-          // Query untuk mengambil data dari tabel products
-          include 'koneksi.php'; // Pastikan file koneksi.php ada dan berisi koneksi ke database yang benar. 
-          $sql = "SELECT * FROM products";
-          $result = $koneksi->query($sql);
-          
-          
-          $koneksi->close();
-    ?>
-
-
     <div class="wrapper">
       <!-- Navbar -->
       <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -251,7 +279,7 @@
               />
             </div>
             <div class="info">
-              <a href="#" class="d-block">Alexander Pierce</a>
+              <a href="#" class="d-block">Andri</a>
             </div>
           </div>
 
@@ -304,7 +332,7 @@
                with font-awesome or any other icon font library -->
               <!-- <li class="nav-header"></li> -->
               <li class="nav-item">
-                <a href="form_create.php" class="nav-link">
+                <a href="create-product.php" class="nav-link">
                   <!-- <i class="nav-icon far fa-calendar-alt"></i> -->
                   <i class="nav-icon fas fa-cheese"></i>
                   <p>Form_product</p>
@@ -348,9 +376,49 @@
               <div class="col-12">
                 <div class="card">
                   <div class="card-header d-flex justify-content-end">
+                      
                     <h3 class="card-title col align-self-center">
                       List Products
                     </h3>
+
+              <!-- searching -->
+              <form action="" method="POST" class="form-inline" role="search">
+                <div class="input-group input-group-sm">
+                  <input class="form-control form-control-navbar" type="search" size="50" name="keyword_search" placeholder="Search" aria-label="Search" />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" name="cari" type="submit">Cari</button>
+                  </div>
+                 </div>
+              </form>
+
+
+
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                      <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item">
+                        <?php if($halamanAktif > 1) : ?>
+                          <a class="page-link" href="?halaman=<?= $halamanAktif - 1; ?>">&laquo;</a>
+                        <?php endif; ?>
+                        </li>
+                          <li class="page-item">
+                            <?php for($i = 1; $i <= $jumlahHalaman; $i++) : ?>
+                              <?php if ($i == $halamanAktif) : ?>
+                                <a class="page-item btn-primary col-sm-3 " href="?halaman=<?= $i; ?>"> <?= $i; ?></a>
+                                <?php else : ?>
+                                <a class="page-item btn-warning col-sm-1" href="?halaman=<?= $i; ?>"><?= $i; ?></a>
+                              <?php endif; ?>
+                            <?php endfor; ?>
+                        </li>
+                        
+                        <li class="page-item">
+                          <?php if($halamanAktif < $jumlahHalaman) : ?>
+                            <a class="page-link" href="?halaman=<?= $halamanAktif + 1; ?>">&raquo;</a>
+                          <?php endif; ?>
+                        </li>
+              
+                      </ul>
+                    </div>
                     <!-- <div class="col justify-content-md-end"> -->
                     <button id ="tmblcreate" class="btn btn-primary col-sm-2">
                       <i class="nav-icon fas fa-plus mr-2" ></i> Add Product
@@ -359,19 +427,20 @@
                     <script>
                       document.getElementById("tmblcreate").addEventListener("click", function() {
                        // Redirect pengguna ke halaman lain
-                      window.location.href = "form_create.php";
+                      window.location.href = "create-product.php";
                       });
 
                     </script>
 
                     <!-- </div> -->
                   </div>
+                  
                   <!-- /.card-header -->
                   <div class="card-body">
                     <table class="table table-bordered">
-                      
                       <thead>
                         <tr>
+                          <th>NO</th>
                           <th>Nama product</th>
                           <th>Kategori product</th>
                           <th>Kode product</th>
@@ -382,24 +451,17 @@
                       </thead>
                       <tbody>
                       <?php
-                          if ($result->num_rows > 0) {
+                          if ($products->num_rows > 0) {
                               $i = 1;
-                              while ($row = $result->fetch_assoc()) {
+                              while ($row = $products->fetch_assoc()) {
                         ?>
                         <tr>
+                        <td><?php echo $i; ?></td>
                           <td><?php echo $row["product_name"]; ?></td>
                           <td><?php echo $row["category_id"]; ?></td>
                           <td><?php echo $row["product_code"]; ?></td>
                           <td>
                           <?php echo $row["description"]; ?>
-                            <!-- <div class="text-center">
-                              <img
-                                src="../assets/img/produk1.jpg"
-                                class="img-thumbnail"
-                                style="max-width: 150px"
-                                alt=""
-                              />
-                            </div> -->
                           </td>
                           <td><?php echo $row["price"]; ?></td>
                           <td>
@@ -424,26 +486,6 @@
                         ?>
                       </tbody>
                     </table>
-                  </div>
-                  <!-- /.card-body -->
-                  <div class="card-footer clearfix">
-                    <ul class="pagination pagination-sm m-0 float-right">
-                      <li class="page-item">
-                        <a class="page-link" href="#">&laquo;</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">1</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">&raquo;</a>
-                      </li>
-                    </ul>
                   </div>
                 </div>
                 <!-- /.card -->
