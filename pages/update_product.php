@@ -92,9 +92,9 @@ if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
                 <label for="kategoriproduct">Kategori Product</label>
                 <select name="kategoriproduct" class="form-control" id="kategoriproduct">
                   <option value="" disabled>Pilih Kategori</option>
-                  <option value="1">Sports</option>
-                  <option value="2">Daily</option>
-                  <option value="3">Accesoris</option>
+                  <option value="1" <?php if ($data['category_id'] == 1) echo 'selected'; ?>>Sports</option>
+                  <option value="2" <?php if ($data['category_id'] == 2) echo 'selected'; ?>>Daily</option>
+                  <option value="3" <?php if ($data['category_id'] == 3) echo 'selected'; ?>>Accessories</option>
                 </select>
                 </div>
                 <div class="form-group">

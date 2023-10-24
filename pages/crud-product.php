@@ -13,31 +13,54 @@ function query($sql) {
     } 
 }
 
+// $jumlahDataPerHalaman = 5;
+// $jumlahData = query("SELECT COUNT(*) AS total FROM products");
+// $jumlahData = $jumlahData->fetch_assoc()['total'];        
+// $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
+// $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+// $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
+// $products = query("SELECT * FROM products LIMIT $awalData, $jumlahDataPerHalaman");
+// $products = query("SELECT products.*, product_categories.category_name AS category_name 
+//                    FROM products 
+//                    INNER JOIN product_categories ON products.category_id = product_categories.id 
+//                    LIMIT $awalData, $jumlahDataPerHalaman");
+
 $jumlahDataPerHalaman = 5;
 $jumlahData = query("SELECT COUNT(*) AS total FROM products");
 $jumlahData = $jumlahData->fetch_assoc()['total'];        
 $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
 $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
 $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
-$products = query("SELECT * FROM products LIMIT $awalData, $jumlahDataPerHalaman");
+$sortingColumn = "products.id"; // Ganti ini sesuai kolom yang ingin Anda gunakan untuk pengurutan
+$products = query("SELECT products.*, product_categories.category_name AS category_name 
+                   FROM products 
+                   INNER JOIN product_categories ON products.category_id = product_categories.id 
+                   ORDER BY $sortingColumn
+                   LIMIT $awalData, $jumlahDataPerHalaman");
+
+
 
 // Search
 function cari($keyword_search) {
-    $query = "SELECT * FROM products
-              WHERE
-              product_name LIKE '%$keyword_search%' OR
-              category_id LIKE '%$keyword_search%' OR
-              product_code LIKE '%$keyword_search%' OR
-              description LIKE '%$keyword_search%' 
-            ";
-    return query($query);
+  $query = "SELECT products.*, product_categories.category_name AS category_name
+            FROM products
+            INNER JOIN product_categories ON products.category_id = product_categories.id
+            WHERE
+            products.product_name LIKE '%$keyword_search%' OR
+            product_categories.category_name LIKE '%$keyword_search%' OR
+            products.product_code LIKE '%$keyword_search%' OR
+            products.description LIKE '%$keyword_search%'
+          ";
+  return query($query);
 }
 
+            
 if (isset($_POST["cari"])) {
     $products = cari($_POST["keyword_search"]);
 }
 
 $koneksi->close(); // Close the connection after all operations are completed
+
 
       
 ?>
@@ -328,14 +351,10 @@ $koneksi->close(); // Close the connection after all operations are completed
               role="menu"
               data-accordion="false"
             >
-              <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-              <!-- <li class="nav-header"></li> -->
               <li class="nav-item">
-                <a href="create-product.php" class="nav-link">
-                  <!-- <i class="nav-icon far fa-calendar-alt"></i> -->
-                  <i class="nav-icon fas fa-cheese"></i>
-                  <p>Form_product</p>
+                <a href="dashboard.php" class="nav-link">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>Dashboard</p>
                 </a>
               </li>
             </ul>
@@ -458,7 +477,7 @@ $koneksi->close(); // Close the connection after all operations are completed
                         <tr>
                         <td><?php echo $i; ?></td>
                           <td><?php echo $row["product_name"]; ?></td>
-                          <td><?php echo $row["category_id"]; ?></td>
+                          <td><?php echo $row["category_name"]; ?></td>
                           <td><?php echo $row["product_code"]; ?></td>
                           <td>
                           <?php echo $row["description"]; ?>

@@ -1,25 +1,17 @@
-<?php 
+<?php
+include 'koneksi.php'; // Pastikan Anda telah meng-include berkas koneksi.php
 
-session_start();
+// Mengambil jumlah produk
+$queryProduct = $koneksi->query('SELECT COUNT(*) as count FROM products');
+$productCount = $queryProduct->fetch_assoc()['count'];
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: login.html');
-    exit;
-}
-echo 'Selamat datang di dalam dashboard, ' . $_SESSION['username'] . '!';
+// Mengambil jumlah pelanggan
+$queryCustomer = $koneksi->query('SELECT COUNT(*) as count FROM customers');
+$customerCount = $queryCustomer->fetch_assoc()['count'];
 
-
-    $product = [
-        ["1","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk1.jpg","laptop ini baik untuk mahasiwsa"],
-        ["2","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk2.jpg","laptop ini baik untuk mahasiwsa"],
-        ["3","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk3.jpg","laptop ini baik untuk mahasiwsa"],
-        ["4","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk4.jpg","laptop ini baik untuk mahasiwsa"],
-        ["5","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk5.jpg","laptop ini baik untuk mahasiwsa"],
-        ["6","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk6.jpg","laptop ini baik untuk mahasiwsa"],
-        ["7","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk7.jpg","laptop ini baik untuk mahasiwsa"],
-        ["8","Acer Aspire 3 Slim A315","Rp.12.000.000","gambar" =>"../assets/img/produk8.jpg","laptop ini baik untuk mahasiwsa"]
-    ]
-        
+// Mengambil jumlah vendor
+$queryVendor = $koneksi->query('SELECT COUNT(*) as count FROM vendors');
+$vendorCount = $queryVendor->fetch_assoc()['count'];
 ?>
 
 <!DOCTYPE html>
@@ -259,7 +251,7 @@ echo 'Selamat datang di dalam dashboard, ' . $_SESSION['username'] . '!';
               />
             </div>
             <div class="info">
-              <a href="#" class="d-block">Alexander Pierce</a>
+              <a href="#" class="d-block">Andri</a>
             </div>
           </div>
 
@@ -292,7 +284,7 @@ echo 'Selamat datang di dalam dashboard, ' . $_SESSION['username'] . '!';
                with font-awesome or any other icon font library -->
               <!-- <li class="nav-header"></li> -->
               <li class="nav-item">
-                <a href="newproduct.html" class="nav-link active">
+                <a href="crud-product.php" class="nav-link">
                   <!-- <i class="nav-icon far fa-calendar-alt"></i> -->
                   <i class="nav-icon fas fa-cheese"></i>
                   <p>Products</p>
@@ -300,6 +292,23 @@ echo 'Selamat datang di dalam dashboard, ' . $_SESSION['username'] . '!';
               </li>
             </ul>
           </nav>
+
+          <nav class="mt-2">
+            <ul
+              class="nav nav-pills nav-sidebar flex-column"
+              data-widget="treeview"
+              role="menu"
+              data-accordion="false"
+            >
+              <li class="nav-item">
+                <a href="dashboard.php" class="nav-link active">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+            </ul>
+          </nav>
+
           <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
@@ -308,106 +317,53 @@ echo 'Selamat datang di dalam dashboard, ' . $_SESSION['username'] . '!';
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1>Products</h1>
+      <section class="hidden" >
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+              <h3><?php echo $productCount; ?></h3>
+              <p>Products</p>
               </div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item">
-                    <a href="dashboard.html">Home</a>
-                  </li>
-                  <li class="breadcrumb-item active">Products</li>
-                </ol>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
               </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          <!-- /.container-fluid -->
-        </section>
-
-        <!-- Main content -->
-        <section class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-header d-flex justify-content-end">
-                    <h3 class="card-title col align-self-center">
-                      List Products
-                    </h3>
-                    <!-- <div class="col justify-content-md-end"> -->
-                    <button class="btn btn-primary col-sm-2">
-                      <i class="nav-icon fas fa-plus mr-2"></i> Add Product
-                    </button>
-                    <!-- </div> -->
-                  </div>
-                  <!-- /.card-header -->
-                  
-                  <?php foreach ($product as $pro): ?>
-                  <div class="card-body">
-                    <table class="table table-bordered">
-                      
-                      <thead>
-                        <tr>
-                          <th style="width: 10px">#</th>
-                          <th>Product Name</th>
-                          <th>Price</th>
-                          <th>Image</th>
-                          <th style="width: 200px">Deskripsi</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr>
-                          <td><?= $pro [0];  ?></td>
-                          <td><?= $pro [1];  ?></td>
-                          <td><?= $pro [2]; ?></td>
-                          <td>
-                            <div class="text-center">
-                              <img src="<?= $pro['gambar'];  ?>"  class="img-thumbnail" style="max-width: 150px" alt=""/>
-                            </div>
-                          </td>
-                          <td>
-                            <p><?= $pro[3]; ?></p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <?php endforeach; ?>
-
-
-                  <!-- /.card-body -->
-                  <div class="card-footer clearfix">
-                    <ul class="pagination pagination-sm m-0 float-right">
-                      <li class="page-item">
-                        <a class="page-link" href="#">&laquo;</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">1</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">&raquo;</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- /.card -->
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+              <h3><?php echo $customerCount; ?></h3>
+              <p>Customers</p>
               </div>
-              <!-- /.col -->
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <!-- /.row -->
           </div>
-          <!-- /.container-fluid -->
-        </section>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+              <h3><?php echo $vendorCount; ?></h3>
+              <p>Vendors</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person-add"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>    
+      </div>
+    </section>
         <!-- /.content -->
       </div>
       <!-- /.content-wrapper -->
