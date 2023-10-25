@@ -2,28 +2,15 @@
 include 'koneksi.php';
 
 function query($sql) {
-    global $koneksi; // Use the connection from the "koneksi.php" file
+    global $koneksi; 
     $result = $koneksi->query($sql);
     
     if ($result) {
         return $result;
     } else {
-        // Handle errors if the query fails
         echo "Error: " . $koneksi->error;
     } 
 }
-
-// $jumlahDataPerHalaman = 5;
-// $jumlahData = query("SELECT COUNT(*) AS total FROM products");
-// $jumlahData = $jumlahData->fetch_assoc()['total'];        
-// $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
-// $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
-// $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
-// $products = query("SELECT * FROM products LIMIT $awalData, $jumlahDataPerHalaman");
-// $products = query("SELECT products.*, product_categories.category_name AS category_name 
-//                    FROM products 
-//                    INNER JOIN product_categories ON products.category_id = product_categories.id 
-//                    LIMIT $awalData, $jumlahDataPerHalaman");
 
 $jumlahDataPerHalaman = 5;
 $jumlahData = query("SELECT COUNT(*) AS total FROM products");
@@ -31,7 +18,7 @@ $jumlahData = $jumlahData->fetch_assoc()['total'];
 $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
 $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
 $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
-$sortingColumn = "products.id"; // Ganti ini sesuai kolom yang ingin Anda gunakan untuk pengurutan
+$sortingColumn = "products.id";
 $products = query("SELECT products.*, product_categories.category_name AS category_name 
                    FROM products 
                    INNER JOIN product_categories ON products.category_id = product_categories.id 
@@ -59,10 +46,8 @@ if (isset($_POST["cari"])) {
     $products = cari($_POST["keyword_search"]);
 }
 
-$koneksi->close(); // Close the connection after all operations are completed
-
-
-      
+$koneksi->close(); 
+    
 ?>
 
 <!DOCTYPE html>
