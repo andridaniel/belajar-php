@@ -12,6 +12,46 @@ $customerCount = $queryCustomer->fetch_assoc()['count'];
 // Mengambil jumlah vendor
 $queryVendor = $koneksi->query('SELECT COUNT(*) as count FROM vendors');
 $vendorCount = $queryVendor->fetch_assoc()['count'];
+
+function getCurrentIndonesianDateTime() {
+  date_default_timezone_set("Asia/Jakarta");
+  $now = new DateTime();
+  $now->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
+  $dayOfWeek = $now->format("l");
+  $day = $now->format("d");
+  $month = $now->format("F");
+  $year = $now->format("Y");
+  $time = $now->format("H:i:s");
+
+  $indonesianDate = array(
+      'Sunday' => 'Minggu',
+      'Monday' => 'Senin',
+      'Tuesday' => 'Selasa',
+      'Wednesday' => 'Rabu',
+      'Thursday' => 'Kamis',
+      'Friday' => 'Jumat',
+      'Saturday' => 'Sabtu',
+      'January' => 'Januari',
+      'February' => 'Februari',
+      'March' => 'Maret',
+      'April' => 'April',
+      'May' => 'Mei',
+      'June' => 'Juni',
+      'July' => 'Juli',
+      'August' => 'Agustus',
+      'September' => 'September',
+      'October' => 'Oktober',
+      'November' => 'November',
+      'December' => 'Desember'
+  );
+
+  $indonesianDateTime = $indonesianDate[$dayOfWeek] . ', ' . $day . ' ' . $indonesianDate[$month] . ' ' . $year . ' ' . $time;
+
+  return $indonesianDateTime;
+}
+$indonesianDateTime = getCurrentIndonesianDateTime();
+
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +84,9 @@ $vendorCount = $queryVendor->fetch_assoc()['count'];
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"
               ><i class="fas fa-bars"></i
             ></a>
+          </li>
+          <li class="nav-item d-none d-sm-inline-block mt-2">
+            <?php echo $indonesianDateTime; ?>
           </li>
           <li class="nav-item d-none d-sm-inline-block">
             <a href="dashboard.html" class="nav-link">Home</a>
@@ -280,14 +323,10 @@ $vendorCount = $queryVendor->fetch_assoc()['count'];
               role="menu"
               data-accordion="false"
             >
-              <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-              <!-- <li class="nav-header"></li> -->
               <li class="nav-item">
-                <a href="crud-product.php" class="nav-link">
-                  <!-- <i class="nav-icon far fa-calendar-alt"></i> -->
-                  <i class="nav-icon fas fa-cheese"></i>
-                  <p>Products</p>
+                <a href="dashboard.php" class="nav-link active">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>Dashboard</p>
                 </a>
               </li>
             </ul>
@@ -301,9 +340,9 @@ $vendorCount = $queryVendor->fetch_assoc()['count'];
               data-accordion="false"
             >
               <li class="nav-item">
-                <a href="dashboard.php" class="nav-link active">
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>Dashboard</p>
+                <a href="crud-product.php" class="nav-link">
+                  <i class="nav-icon fas fa-cheese"></i>
+                  <p>Products</p>
                 </a>
               </li>
             </ul>
@@ -317,7 +356,7 @@ $vendorCount = $queryVendor->fetch_assoc()['count'];
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-      <section class="hidden" >
+      <section class="hidden mt-3" >
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">

@@ -316,14 +316,10 @@ $koneksi->close();
               role="menu"
               data-accordion="false"
             >
-              <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-              <!-- <li class="nav-header"></li> -->
               <li class="nav-item">
-                <a href="newproduct.html" class="nav-link active">
-                  <!-- <i class="nav-icon far fa-calendar-alt"></i> -->
-                  <i class="nav-icon fas fa-cheese"></i>
-                  <p>Products</p>
+                <a href="dashboard.php" class="nav-link">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>Dashboard</p>
                 </a>
               </li>
             </ul>
@@ -337,9 +333,9 @@ $koneksi->close();
               data-accordion="false"
             >
               <li class="nav-item">
-                <a href="dashboard.php" class="nav-link">
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>Dashboard</p>
+                <a href="newproduct.html" class="nav-link active">
+                  <i class="nav-icon fas fa-cheese"></i>
+                  <p>Products</p>
                 </a>
               </li>
             </ul>
@@ -450,6 +446,8 @@ $koneksi->close();
                           <th>Kode product</th>
                           <th>Deskripsi</th>
                           <th>Harga</th>
+                          <th>Stock</th>
+                          <th>Image</th>
                           <th style="width: 200px">Action</th>
                         </tr>
                       </thead>
@@ -468,6 +466,18 @@ $koneksi->close();
                           <?php echo $row["description"]; ?>
                           </td>
                           <td><?php echo $row["price"]; ?></td>
+                          <td><?php echo $row["stock"]; ?></td>
+                          <td>
+                          <?php
+                            $gambarArray = json_decode($row["image"]);
+                            if ($gambarArray !== null && is_array($gambarArray)) {
+                              foreach ($gambarArray as $gambar) {
+                                echo '<img src="../assets/img/gambar/' . $gambar . '" alt="gambar" width=80><br>';
+                              }
+                            }
+                          ?>
+
+                          </td>
                           <td>
                           <a href="update_product.php?id=<?php echo $row['id']; ?>" class="btn btn-info">
                             <i class="nav-icon fas fa-edit mr-2"></i>Update
