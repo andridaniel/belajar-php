@@ -1,9 +1,40 @@
+<?php
+session_start();
+
+include 'koneksi.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $no_hp = $_POST['no_hp'];
+  $password = $_POST['password'];
+
+  // Lindungi diri Anda dari SQL Injection dengan menghindari inputan langsung
+  $no_hp = mysqli_real_escape_string($koneksi, $no_hp);
+  $password = mysqli_real_escape_string($koneksi, $password);
+
+  $sql = "SELECT * FROM users WHERE phone_number = '$no_hp' AND password = '$password'";
+  $result = mysqli_query($koneksi, $sql);
+
+  if ($result) {
+      if (mysqli_num_rows($result) == 1) {
+          $_SESSION['no_hp'] = $no_hp;
+          header('Location: dashboard.php');
+      } else {
+          $error = "Login gagal.Silahkan Periksa kembali nomor handphone dan password Anda.";
+      }
+  } else {
+      $error = "Terjadi kesalahan dalam eksekusi query.";
+  }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login-layout</title>
+    <title>Halaman-login</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link
@@ -19,31 +50,6 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css" />
   </head>
-
-  <?php
-session_start();
-
-
-$validUsername = 'andri';
-$validPassword = 'andri';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-
-    if ($username === $validUsername && $password === $validPassword) {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-
-        // Redirect ke halaman setelah login
-        header('Location: ../pages/dashboard.php');
-        exit;
-    } else {
-        echo 'Username atau password salah. Silakan coba lagi.';
-    }
-}
-?>
   <body class="hold-transition login-page">
     <div class="login-box">
       <!-- /.login-logo -->
@@ -67,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <form action="halaman-login.php" method="POST">
             <div class="container">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="username" name="username"  placeholder="Username" />
+                    <input type="text" class="form-control" id="no_hp" name="no_hp"  placeholder="No Hp" />
                     <div class="input-group-append">
                       <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
@@ -87,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       >Forgot Password?</a
                     >
                   </p>
+                  <p><?php if (isset($error)) { echo "<p>$error</p>"; } ?></p>
                   <button type="submit" class="btn btn-warning btn-block">
                     Sign In
                   </button>
@@ -97,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <p class="mb-0 mt-3 text-center">
             Don't have an account?
-            <a href="register.html" class="text-warning fw-bold"><b>Sign up</b></a>
+            <a href="register.php" class="text-warning fw-bold"><b>Sign up</b></a>
 
           </p>
         </div>

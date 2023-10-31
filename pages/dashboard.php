@@ -1,6 +1,15 @@
 <?php
 include 'koneksi.php'; // Pastikan Anda telah meng-include berkas koneksi.php
 
+//login dahulu baru bisa masuk ke halaman
+session_start();
+
+if (!isset($_SESSION['no_hp'])) {
+    header('Location: halaman-login.php');
+    exit();
+}
+$no_hp = $_SESSION['no_hp'];
+
 // Mengambil jumlah produk
 $queryProduct = $koneksi->query('SELECT COUNT(*) as count FROM products');
 $productCount = $queryProduct->fetch_assoc()['count'];
@@ -59,7 +68,7 @@ $indonesianDateTime = getCurrentIndonesianDateTime();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AdminLTE 3 | Products</title>
+    <title>Dahsboard</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link
@@ -294,7 +303,11 @@ $indonesianDateTime = getCurrentIndonesianDateTime();
               />
             </div>
             <div class="info">
-              <a href="#" class="d-block">Andri</a>
+              <a href="#" class="d-block"><?php echo $no_hp; ?></a>
+            </div>
+
+            <div class="info">
+              <a href="logout.php" class="d-block">Logout</a>
             </div>
           </div>
 

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock = $_POST["stock"];
     $gambarLama = $_POST["gambarLama"];
 
-    if ($_FILES['gambar']['error'] === 4){
+    if ( $_FILES['gambar']['error'] === 4 ){
       $gambar = $gambarLama;
     }else{
       $gambar = upload();
@@ -162,11 +162,13 @@ if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
           <div class="form-group">
           <?php
             $gambarArray = json_decode($data['image']);
-              if (!empty($gambarArray)) {
+            if (!empty($gambarArray)) {
+              echo "<p>Gambar Lama:</p>";
               foreach ($gambarArray as $gambar) {
-              echo '<img src="../assets/img/gambar/' . $gambar . '" width="70" alt="gambar"><br>';
+                echo '<img src="../assets/img/gambar/' . $gambar . '" width="70" alt="gambar"><br>';
               }
             }
+            
           ?>
           <input type="file" name="gambar[]" id="gambar" multiple>
           </div>

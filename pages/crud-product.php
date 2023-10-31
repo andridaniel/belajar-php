@@ -472,7 +472,7 @@ $koneksi->close();
                             $gambarArray = json_decode($row["image"]);
                             if ($gambarArray !== null && is_array($gambarArray)) {
                               foreach ($gambarArray as $gambar) {
-                                echo '<img src="../assets/img/gambar/' . $gambar . '" alt="gambar" width=80><br>';
+                                echo '<img src="../assets/img/gambar/' . $gambar . '" alt="gambar" width=80 class="m-2 border border-5"><br>';
                               }
                             }
                           ?>
